@@ -16,7 +16,7 @@ public class TestEnemy : MonoBehaviour
     }
     private void OnTriggerEnter(Collider other)
     {
-        if (other.gameObject.CompareTag("Player") && player.isDash)
+        if (other.gameObject.CompareTag("Player") && player.dashReady)
         {
             Hit();
             Debug.Log("발도맞음");
