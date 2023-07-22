@@ -13,6 +13,8 @@ public class Enemy_long : Enemy
     protected override void Update()
     {
         base.Update();
+        player_fix = player;
+        rotate();
         gun();
     }
 
@@ -24,8 +26,6 @@ public class Enemy_long : Enemy
         }
         else
         {
-            player_fix = player;
-            rotate();
             Instantiate(Bullet, Gun.transform.position, Gun.transform.rotation);
             Cur_E_Bullet_Delay = 0;
         }

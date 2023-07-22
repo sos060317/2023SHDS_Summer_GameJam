@@ -18,12 +18,10 @@ public class Enemy : MonoBehaviour
         rigid = GetComponent<Rigidbody>();
         player = GameObject.FindGameObjectWithTag("Player").transform;
     }
-
     
     protected virtual void Update()
     {
         E_Move();
-        
     }
 
     void E_Move() // 플레이어 추적해서 이동
