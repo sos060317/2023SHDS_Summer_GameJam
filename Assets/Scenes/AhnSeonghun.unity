@@ -413,12 +413,14 @@ MonoBehaviour:
   m_GameObject: {fileID: 1075064411}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 0e8bb93025cf11e42bf14933758dade7, type: 3}
+  m_Script: {fileID: 11500000, guid: ec77e0a79294c2849af7f7f22acfa9ab, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
   E_moveSpeed: 1
-  E_BoosterSpeed: 0
-  E_dash_Delay: 0
+  player: {fileID: 1042925212}
+  E_Bullet_Delay: 2
+  Bullet: {fileID: 1593690214057135534, guid: dbd403d072cdbf249aba84bcefc5eca4, type: 3}
+  Gun: {fileID: 2014308383}
 --- !u!1 &1087142962
 GameObject:
   m_ObjectHideFlags: 0
@@ -749,9 +751,10 @@ MonoBehaviour:
   m_GameObject: {fileID: 2066243364}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 0e8bb93025cf11e42bf14933758dade7, type: 3}
+  m_Script: {fileID: 11500000, guid: fcff94fc3343f554f9c869947c517b08, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
   E_moveSpeed: 1
+  player: {fileID: 1042925212}
   E_BoosterSpeed: 0.05
-  E_dash_Delay: 1
+  E_dash_Delay: 2
