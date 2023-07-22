@@ -10,15 +10,14 @@ public class Player : MonoBehaviour
 
     private float moveX;
     private float moveZ;
-
+    private float lastTurnSpeed = 100f;
 
     Rigidbody rigid;
+    Animator animator;
 
     Vector3 moveVec;
-    Vector3 forwardVec;
-    Vector3 targetPosition;
 
-    private void Start()
+    private void Awake()
     {
         rigid = GetComponent<Rigidbody>();
     }
@@ -27,7 +26,7 @@ public class Player : MonoBehaviour
     {
         Move();
         Dash();
-        CheckMyForward();
+        MouseCursor();
     }
 
     void Move() // 플레이어 움직임 (wasd)
@@ -35,7 +34,11 @@ public class Player : MonoBehaviour
         moveX = Input.GetAxisRaw("Horizontal");
         moveZ = Input.GetAxisRaw("Vertical");
 
-        // moveVec = (moveX, 0, moveZ);
+        // 가만히 있지 않는 상태를 확인해주기위함
+        bool hasHorizontalInput = !Mathf.Approximately(moveX, 0f);
+        bool hasVerticalInput = !Mathf.Approximately(moveZ, 0f);
+
+        moveVec = new Vector3(moveX, 0, moveZ);
         rigid.velocity = moveVec.normalized * moveSpeed;
     }
 
@@ -43,22 +46,30 @@ public class Player : MonoBehaviour
     {
         if(Input.GetMouseButtonDown(1))
         {
-            
             StartCoroutine(_Dash());
         }
     }
 
     IEnumerator _Dash()
     {
+        Time.timeScale = 0.05f;
         yield return new WaitForSeconds(0.5f);
-
-        Vector3.MoveTowards(transform.position, targetPosition, dashSpeed);
+        Time.timeScale = 1f;
+        Vector3.MoveTowards(transform.position, transform.forward, dashSpeed);
     }
 
-    void CheckMyForward() // 대시할 목표지점의 벡터를 구해주는 함수
+    void MouseCursor()
     {
-        forwardVec = transform.forward;
-        targetPosition = transform.position + forwardVec * dashDistance;
-        Debug.Log(targetPosition);
+        Cursor.lockState = CursorLockMode.Confined;
+
+        Ray cameraRay = Camera.main.ScreenPointToRay(Input.mousePosition);
+        Plane GroupPlane = new Plane(Vector3.up, Vector3.zero);
+        float rayLength;
+
+        if (GroupPlane.Raycast(cameraRay, out rayLength))
+        {
+            Vector3 pointTolook = cameraRay.GetPoint(rayLength);
+            transform.LookAt(new Vector3(pointTolook.x, transform.position.y, pointTolook.z));
+        }
     }
 }
