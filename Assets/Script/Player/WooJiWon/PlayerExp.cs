@@ -1,21 +1,38 @@
-using Unity.VisualScripting;
 using UnityEngine;
-using Update = UnityEngine.PlayerLoop.Update;
+using UnityEngine.UI;
 
 public class PlayerExp : MonoBehaviour
 {
-    private float playerExp;
+    [SerializeField] private Image valueBar;
+    
+    public float maxValue = 100.0f;
+    public float currentValue = 0;
 
     void Update()
     {
-        expUp();
+        ValueUp();
+        UpdateValue();
     }
     
-    private void expUp()
+    // 1. Value를 Set해주는 함수
+    public void SetValue(float value)
     {
-        if (Input.GetKeyDown(KeyCode.Space))
-        {
-            playerExp += 10.0f;
-        }
+        currentValue += value;
+        valueBar.fillAmount = currentValue / maxValue;
+    }
+
+
+    private void UpdateValue()
+    {
+        valueBar.fillAmount = currentValue / maxValue;
+    }
+    
+    private void ValueUp()
+    {
+        if (currentValue >= maxValue)
+            currentValue = maxValue;
+        
+        if (currentValue <= 0)
+            currentValue = 0;
     }
 }
