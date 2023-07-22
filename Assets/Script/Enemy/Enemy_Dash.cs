@@ -4,9 +4,11 @@ using UnityEngine;
 
 public class Enemy_Dash : Enemy
 {
+    [SerializeField] protected float E_DashATK;
     [SerializeField] private float E_BoosterSpeed;
     [SerializeField] private float E_dash_Delay;
     private float Cur_E_dash_Delay = 0;
+    
     
     protected override void Update()
     {

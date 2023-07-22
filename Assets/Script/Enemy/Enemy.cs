@@ -4,6 +4,9 @@ using UnityEngine;
 
 public class Enemy : MonoBehaviour
 {
+    [SerializeField] protected float E_HP;
+    [SerializeField] protected float E_ATK;
+
     [SerializeField] protected float E_moveSpeed;
     [SerializeField] protected Transform player;
     protected Transform player_fix;
