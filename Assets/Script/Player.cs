@@ -6,6 +6,11 @@ public class Player : MonoBehaviour
 {
     [SerializeField] private float moveSpeed;
     [SerializeField] private float dashSpeed; //
+    [SerializeField] private float dashDistance; // ´ë½ÃÇÒ ¸ñÇ¥ÁöÁ¡ÀÇ °Å¸®\
+
+    private float moveX;
+    private float moveZ;
+
 
     Rigidbody rigid;
 
@@ -22,20 +27,24 @@ public class Player : MonoBehaviour
     {
         Move();
         Dash();
+        CheckMyForward();
     }
 
-    void Move() // ï¿½Ã·ï¿½ï¿½Ì¾ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ (wasd)
+    void Move() // ÇÃ·¹ÀÌ¾î ¿òÁ÷ÀÓ (wasd)
     { 
-        moveVec.x = Input.GetAxisRaw("Horizontal");
-        moveVec.z = Input.GetAxisRaw("Vertical");
+        moveX = Input.GetAxisRaw("Horizontal");
+        moveZ = Input.GetAxisRaw("Vertical");
+
+        // moveVec = (moveX, 0, moveZ);
         rigid.velocity = moveVec.normalized * moveSpeed;
     }
 
-    void Dash() // ï¿½Ã·ï¿½ï¿½Ì¾ï¿½ ï¿½ßµï¿½ï¿½ï¿½ (ï¿½ï¿½ï¿½ì½º ï¿½ï¿½Å¬ï¿½ï¿½)
+    void Dash() // ÇÃ·¹ÀÌ¾î ¹ßµµ¼ú (¸¶¿ì½º ¿ìÅ¬¸¯)
     {
         if(Input.GetMouseButtonDown(1))
         {
             
+            StartCoroutine(_Dash());
         }
     }
 
@@ -46,9 +55,10 @@ public class Player : MonoBehaviour
         Vector3.MoveTowards(transform.position, targetPosition, dashSpeed);
     }
 
-    void CheckMyForward() // ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½Ç¥ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½Í¸ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½Ö´ï¿½ ï¿½Ô¼ï¿½
+    void CheckMyForward() // ´ë½ÃÇÒ ¸ñÇ¥ÁöÁ¡ÀÇ º¤ÅÍ¸¦ ±¸ÇØÁÖ´Â ÇÔ¼ö
     {
         forwardVec = transform.forward;
-        //targetPosition = transform.position + forwardVec * ;
+        targetPosition = transform.position + forwardVec * dashDistance;
+        Debug.Log(targetPosition);
     }
 }
