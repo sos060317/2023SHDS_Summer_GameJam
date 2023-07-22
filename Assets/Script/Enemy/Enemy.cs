@@ -23,6 +23,7 @@ public class Enemy : MonoBehaviour
     protected virtual void Update()
     {
         E_Move();
+        
     }
 
     void E_Move() // 플레이어 추적해서 이동

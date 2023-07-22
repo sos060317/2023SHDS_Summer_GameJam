@@ -10,4 +10,12 @@ public class Bullet : MonoBehaviour
     {
         transform.Translate(Vector3.forward * 0.05f);   // 탄환 날아감
     }
+
+    void OnTriggerEnter(Collider col)
+    {
+        if (col.gameObject.tag == "Player")
+        {
+            Destroy(gameObject);
+        }
+    }
 }
