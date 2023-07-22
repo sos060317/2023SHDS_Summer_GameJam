@@ -43,12 +43,12 @@ public class Player : MonoBehaviour
     {
         yield return new WaitForSeconds(0.5f);
 
-        //Vector3.MoveTowards(transform.position, );
+        Vector3.MoveTowards(transform.position, targetPosition, dashSpeed);
     }
 
     void CheckMyForward() // 대시할 목표지점의 벡터를 구해주는 함수
     {
         forwardVec = transform.forward;
-        //targetPosition = transform.position + forwardVec * 
+        targetPosition = transform.position + forwardVec * ;
     }
 }
