@@ -27,7 +27,6 @@ public class Enemy : MonoBehaviour
     {
         E_Move();
         E_dash();
-        CheckEnemyForward();
     }
 
     void E_Move() // 플레이어 추적해서 이동
