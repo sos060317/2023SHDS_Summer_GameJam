@@ -10,10 +10,13 @@ public class Player : MonoBehaviour
 
     private float moveX;
     private float moveZ;
-    private float lastTurnSpeed = 100f;
+
+    bool isDash = false;
+    bool isAttack = false;
 
     Rigidbody rigid;
-    Animator animator;
+
+    public GameObject attackRange;
 
     Vector3 moveVec;
 
@@ -26,7 +29,9 @@ public class Player : MonoBehaviour
     {
         Move();
         Dash();
-        MouseCursor();
+        LookMouseCursor();
+        Time.timeScale += (1f / 2f) * Time.unscaledDeltaTime;
+        Time.timeScale = Mathf.Clamp(Time.timeScale , 0f, 1f);
     }
 
     void Move() // 플레이어 움직임 (wasd)
@@ -44,7 +49,12 @@ public class Player : MonoBehaviour
 
     void Dash() // 플레이어 발도술 (마우스 우클릭)
     {
-        if(Input.GetMouseButtonDown(1))
+        if (Input.GetMouseButtonDown(0) && !isDash && !isAttack)
+        {
+            StartCoroutine(_Attack());
+        }
+
+        if(Input.GetMouseButtonDown(1) && !isDash && !isAttack)
         {
             StartCoroutine(_Dash());
         }
@@ -52,13 +62,31 @@ public class Player : MonoBehaviour
 
     IEnumerator _Dash()
     {
-        Time.timeScale = 0.05f;
-        yield return new WaitForSeconds(0.5f);
-        Time.timeScale = 1f;
-        Vector3.MoveTowards(transform.position, transform.forward, dashSpeed);
+        isDash = true;
+        SlowMotion();
+        yield return new WaitForSeconds(0.05f);
+        isDash = false;
+        rigid.AddForce(transform.forward * dashSpeed * 1000f, ForceMode.Impulse);
     }
 
-    void MouseCursor()
+    IEnumerator _Attack()
+    {
+        isAttack = true;
+        attackRange.SetActive(true);
+        yield return new WaitForSeconds(0.1f);
+        attackRange.SetActive(false);
+        isAttack = false;
+    }
+
+    private void OnCollisionEnter2D(Collision2D collision)
+    {
+        if (collision.gameObject.CompareTag("Enemy") && isDash)
+        {
+
+        }
+    }
+
+    void LookMouseCursor() // 마우스커서를 화면밖으로 나가지 않게 제어하고 마우스커서 방향쪽으로 플레이어가 바라보게 하는함수
     {
         Cursor.lockState = CursorLockMode.Confined;
 
@@ -72,4 +100,11 @@ public class Player : MonoBehaviour
             transform.LookAt(new Vector3(pointTolook.x, transform.position.y, pointTolook.z));
         }
     }
+
+    void SlowMotion() // 슬로우모션
+    {
+        Time.timeScale = 0.05f;
+        Time.fixedDeltaTime = Time.timeScale * .02f;
+    }
+    
 }
