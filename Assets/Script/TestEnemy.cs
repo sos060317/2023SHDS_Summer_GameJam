@@ -8,6 +8,8 @@ public class TestEnemy : MonoBehaviour
     public Player player;
     [SerializeField] private int Hp = 10;
 
+    public GameObject hitEffect;
+
     private void Update()
     {
         
@@ -16,7 +18,19 @@ public class TestEnemy : MonoBehaviour
     {
         if (other.gameObject.CompareTag("Player") && player.dashReady)
         {
-            Debug.Log("À¸¾Ç");
+            Hit();
+            Debug.Log("¹ßµµ¸ÂÀ½");
         }
+        if (other.gameObject.CompareTag("Slash"))
+        {
+            Hit();
+            Debug.Log("Ä®¸ÂÀ½");
+        }
+    }
+
+    public void Hit()
+    {
+        var _hitEffect = Instantiate(hitEffect, transform.position, transform.rotation);
+        Destroy(_hitEffect, 0.5f);
     }
 }
