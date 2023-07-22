@@ -2,6 +2,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
+
 public class Player : MonoBehaviour
 {
     [SerializeField] private float moveSpeed;
@@ -18,10 +19,18 @@ public class Player : MonoBehaviour
     Rigidbody rigid;
     Animator animator;
 
+
     public GameObject attackRange;
+    [Header("Effect")]
+    public GameObject dashEffect;
+    public GameObject dashReadyEffect;
+
+
 
     Vector3 moveVec;
     Vector3 dashDir;
+
+    Quaternion dashQuaternion;
 
     private void Start()
     {
@@ -51,21 +60,16 @@ public class Player : MonoBehaviour
         // 가만히 있지 않는 상태를 확인해주기위함
         bool hasHorizontalInput = !Mathf.Approximately(moveX, 0f);
         bool hasVerticalInput = !Mathf.Approximately(moveZ, 0f);
+        bool isRunning = hasHorizontalInput || hasVerticalInput;
+        animator.SetBool("running", isRunning);
 
         moveVec = new Vector3(moveX, 0, moveZ);
         rigid.velocity = moveVec.normalized * moveSpeed;
     }
 
-    void Animation()
-    {
-        
-        animator.SetBool("attack", dashReady);
-        animator.SetBool("attack", isAttack);
-    }
-
     void Dash() // 플레이어 발도술 (마우스 우클릭)
     {
-        if (Input.GetMouseButtonDown(0) && !isDash && !isAttack)
+        if (Input.GetMouseButtonDown(0) && !isAttack)
         {
             StartCoroutine(_Attack());
         }
@@ -79,39 +83,37 @@ public class Player : MonoBehaviour
     IEnumerator _Dash()
     {
         dashDir = transform.forward;
+        dashQuaternion = transform.rotation * Quaternion.Euler(45, 0, 0);
         isDash = true;
-        animator.SetBool("attackReady", isDash);
+        var dash02 = Instantiate(dashEffect, transform.position, dashQuaternion);
+        Destroy(dash02, 0.5f);
+        animator.SetBool("attackReady", true);
         SlowMotion();
         yield return new WaitForSeconds(0.05f);
         animator.SetBool("attackReady", false);
         dashReady = true;
         yield return new WaitForSeconds(0.01f);
-        dashReady = false;
-        // transform.position = Vector3.MoveTowards(transform.position, dashPoint.position, dashSpeed);
-        isDash = false;
         
-        // rigid.AddForce(transform.forward * dashSpeed * 1000f, ForceMode.Impulse);
+        dashReady = false;
+        yield return new WaitForSeconds(1f);
+        isDash = false;
     }
 
     IEnumerator _Attack()
     {
+
         isAttack = true;
         attackRange.SetActive(true);
-        animator.SetBool("Slash", true);
+
+        animator.SetBool("slash", true);
         yield return new WaitForSeconds(0.1f);
         attackRange.SetActive(false);
-        animator.SetBool("Slash", false);
+        yield return new WaitForSeconds(0.4f);
+
+        animator.SetBool("slash", false);
+        yield return new WaitForSeconds(0.5f);
         isAttack = false;
     }
-
-    private void OnCollisionEnter2D(Collision2D collision)
-    {
-        if (collision.gameObject.CompareTag("enemy") && isDash)
-        {
-
-        }
-    }
-
     void LookMouseCursor() // 마우스커서를 화면밖으로 나가지 않게 제어하고 마우스커서 방향쪽으로 플레이어가 바라보게 하는함수
     {
         Cursor.lockState = CursorLockMode.Confined;
@@ -132,5 +134,12 @@ public class Player : MonoBehaviour
         Time.timeScale = 0.05f;
         Time.fixedDeltaTime = Time.timeScale * .02f;
     }
-    
+
+    private void OnTriggerEnter(Collider other)
+    {
+        if (other.gameObject.CompareTag("enemy") && !isDash && !isAttack)
+        {
+            Debug.Log("피해를 입음");
+        }
+    }
 }
