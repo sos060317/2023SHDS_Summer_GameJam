@@ -11,17 +11,21 @@ public class Player : MonoBehaviour
     private float moveX;
     private float moveZ;
 
-    bool isDash = false;
-    bool isAttack = false;
+    public bool dashReady = false;
+    public bool isDash = false;
+    public bool isAttack = false;
 
     Rigidbody rigid;
+    Animator animator;
 
     public GameObject attackRange;
 
     Vector3 moveVec;
+    Vector3 dashDir;
 
-    private void Awake()
+    private void Start()
     {
+        animator = GetComponent<Animator>();
         rigid = GetComponent<Rigidbody>();
     }
 
@@ -32,6 +36,11 @@ public class Player : MonoBehaviour
         LookMouseCursor();
         Time.timeScale += (1f / 2f) * Time.unscaledDeltaTime;
         Time.timeScale = Mathf.Clamp(Time.timeScale , 0f, 1f);
+
+        if (dashReady)
+        {
+            rigid.velocity = dashDir * dashSpeed;
+        }
     }
 
     void Move() // 플레이어 움직임 (wasd)
@@ -45,6 +54,13 @@ public class Player : MonoBehaviour
 
         moveVec = new Vector3(moveX, 0, moveZ);
         rigid.velocity = moveVec.normalized * moveSpeed;
+    }
+
+    void Animation()
+    {
+        
+        animator.SetBool("attack", dashReady);
+        animator.SetBool("attack", isAttack);
     }
 
     void Dash() // 플레이어 발도술 (마우스 우클릭)
@@ -62,25 +78,35 @@ public class Player : MonoBehaviour
 
     IEnumerator _Dash()
     {
+        dashDir = transform.forward;
         isDash = true;
+        animator.SetBool("attackReady", isDash);
         SlowMotion();
         yield return new WaitForSeconds(0.05f);
+        animator.SetBool("attackReady", false);
+        dashReady = true;
+        yield return new WaitForSeconds(0.01f);
+        dashReady = false;
+        // transform.position = Vector3.MoveTowards(transform.position, dashPoint.position, dashSpeed);
         isDash = false;
-        rigid.AddForce(transform.forward * dashSpeed * 1000f, ForceMode.Impulse);
+        
+        // rigid.AddForce(transform.forward * dashSpeed * 1000f, ForceMode.Impulse);
     }
 
     IEnumerator _Attack()
     {
         isAttack = true;
         attackRange.SetActive(true);
+        animator.SetBool("Slash", true);
         yield return new WaitForSeconds(0.1f);
         attackRange.SetActive(false);
+        animator.SetBool("Slash", false);
         isAttack = false;
     }
 
     private void OnCollisionEnter2D(Collision2D collision)
     {
-        if (collision.gameObject.CompareTag("Enemy") && isDash)
+        if (collision.gameObject.CompareTag("enemy") && isDash)
         {
 
         }
