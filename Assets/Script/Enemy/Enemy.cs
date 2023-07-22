@@ -7,10 +7,13 @@ public class Enemy : MonoBehaviour
     [SerializeField] private float E_moveSpeed;
     [SerializeField ]private float E_BoosterSpeed;
     [SerializeField] private float E_dash_Delay;
+    [SerializeField] private float E_Bullet_Delay;
     private float Cur_E_dash_Delay = 0;
+    private float Cur_E_Bullet_Delay = 0;
     private Transform player;
     private Transform player_fix;
-    
+
+    private GameObject Bullet;
     
     Rigidbody rigid;
 
@@ -71,4 +74,16 @@ public class Enemy : MonoBehaviour
 
         transform.rotation = rot;
     }
+
+    // void Gun()
+    // {
+    //     if(E_Bullet_delay > Cur_E_Bullet_Delay)
+    //     {
+    //         Cur_E_Bullet_Delay += Time.deltaTime;
+    //     }
+    //     else
+    //     {
+    //         Instantiate(Bullet, Gun.transform.position, )
+    //     }
+    // }
 }
