@@ -18,6 +18,8 @@ public class GameManager : MonoBehaviour
         }
     }
 
+    public PlayerTest player;
+
     private void Awake()
     {
         if (instance == null)
