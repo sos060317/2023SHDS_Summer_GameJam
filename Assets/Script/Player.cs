@@ -24,14 +24,14 @@ public class Player : MonoBehaviour
         Dash();
     }
 
-    void Move() // ÇÃ·¹ÀÌ¾î ¿òÁ÷ÀÓ (wasd)
+    void Move() // ï¿½Ã·ï¿½ï¿½Ì¾ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ (wasd)
     { 
         moveVec.x = Input.GetAxisRaw("Horizontal");
         moveVec.z = Input.GetAxisRaw("Vertical");
         rigid.velocity = moveVec.normalized * moveSpeed;
     }
 
-    void Dash() // ÇÃ·¹ÀÌ¾î ¹ßµµ¼ú (¸¶¿ì½º ¿ìÅ¬¸¯)
+    void Dash() // ï¿½Ã·ï¿½ï¿½Ì¾ï¿½ ï¿½ßµï¿½ï¿½ï¿½ (ï¿½ï¿½ï¿½ì½º ï¿½ï¿½Å¬ï¿½ï¿½)
     {
         if(Input.GetMouseButtonDown(1))
         {
@@ -46,9 +46,9 @@ public class Player : MonoBehaviour
         Vector3.MoveTowards(transform.position, targetPosition, dashSpeed);
     }
 
-    void CheckMyForward() // ´ë½ÃÇÒ ¸ñÇ¥ÁöÁ¡ÀÇ º¤ÅÍ¸¦ ±¸ÇØÁÖ´Â ÇÔ¼ö
+    void CheckMyForward() // ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½Ç¥ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½Í¸ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½Ö´ï¿½ ï¿½Ô¼ï¿½
     {
         forwardVec = transform.forward;
-        targetPosition = transform.position + forwardVec * ;
+        //targetPosition = transform.position + forwardVec * ;
     }
 }
