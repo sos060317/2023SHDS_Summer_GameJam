@@ -8,6 +8,6 @@ public class Bullet : MonoBehaviour
 
     void Update()
     {
-        transform.Translate(Vector3.forward * 0.05f);   
+        transform.Translate(Vector3.forward * 0.05f);   // 탄환 날아감
     }
 }

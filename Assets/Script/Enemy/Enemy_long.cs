@@ -16,7 +16,7 @@ public class Enemy_long : Enemy
         gun();
     }
 
-    void gun()
+    void gun() // 쿨타임이 돌면 탄환 생성
     {
         if(E_Bullet_Delay > Cur_E_Bullet_Delay)
         {
