@@ -6,7 +6,7 @@ public class Player : MonoBehaviour
 {
     [SerializeField] private float moveSpeed;
     [SerializeField] private float dashSpeed; //
-    [SerializeField] private float dashDistance; // 대시할 목표지점의 거리\
+    [SerializeField] private float dashDistance; // 대시할 목표지점의 거리
 
     private float moveX;
     private float moveZ;
