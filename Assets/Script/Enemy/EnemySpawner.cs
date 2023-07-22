@@ -5,7 +5,7 @@ using Random = UnityEngine.Random;
 public class EnemySpawner : MonoBehaviour
 {
     [SerializeField] private GameObject rangeObject;
-    [SerializeField] private GameObject enemy;
+    [SerializeField] private GameObject[] enemy;
 
     private BoxCollider rangeCollider;
     private void Awake()
@@ -20,11 +20,12 @@ public class EnemySpawner : MonoBehaviour
 
     IEnumerator RandomSpawn()
     {
+        int randomEnemy = Random.Range(0, enemy.Length);
         while(true)
         {
             yield return new WaitForSeconds(1f);
 
-            Instantiate(enemy, Return_RandomPosition(), Quaternion.identity);
+            Instantiate(enemy[randomEnemy], Return_RandomPosition(), Quaternion.identity);
         }
     }
     
@@ -43,7 +44,7 @@ public class EnemySpawner : MonoBehaviour
         
         float distance = Vector3.Distance(GameManager.Instance.player.transform.position, respawnPosition);
 
-        if (distance < GameManager.Instance.player.GetComponent<PlayerTest>().radius)
+        if (distance < GameManager.Instance.player.GetComponent<Player>().radius)
             return Return_RandomPosition();
             
         return respawnPosition;

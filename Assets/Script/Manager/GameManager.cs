@@ -18,7 +18,7 @@ public class GameManager : MonoBehaviour
         }
     }
 
-    public PlayerTest player;
+    public Player player;
 
     private void Awake()
     {

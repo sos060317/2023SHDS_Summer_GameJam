@@ -13,6 +13,10 @@ public class Enemy : MonoBehaviour
     
     Rigidbody rigid;
 
+    [SerializeField] private int Hp = 10;
+
+    public GameObject hitEffect;
+
     void Start()
     {
         rigid = GetComponent<Rigidbody>();
@@ -41,6 +45,31 @@ public class Enemy : MonoBehaviour
             Quaternion rot = Quaternion.LookRotation(dir.normalized);
 
             transform.rotation = rot;
+        }
+    }
+
+    private void OnTriggerEnter(Collider other)
+    {
+        if (other.gameObject.CompareTag("Player"))
+        {
+            Debug.Log("발도맞음");
+        }
+        if (other.gameObject.CompareTag("Slash"))
+        {
+            Debug.Log("칼맞음");
+        }
+    }
+
+    public void OnDamaged(float damage)
+    {
+        Debug.Log("hfk");
+        var _hitEffect = Instantiate(hitEffect, transform.position, transform.rotation);
+        Destroy(_hitEffect, 0.5f);
+        E_HP -= damage;
+
+        if (E_HP <= 0)
+        {
+            Destroy(gameObject);
         }
     }
 }

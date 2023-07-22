@@ -8,6 +8,7 @@ public class Player : MonoBehaviour
     [SerializeField] private float moveSpeed;
     [SerializeField] private float dashSpeed; //
     [SerializeField] private float dashDistance; // 대시할 목표지점의 거리
+    [SerializeField] private float attackDamage;
 
     private float moveX;
     private float moveZ;
@@ -15,6 +16,8 @@ public class Player : MonoBehaviour
     public bool dashReady = false;
     public bool isDash = false;
     public bool isAttack = false;
+
+    public float radius;
 
     Rigidbody rigid;
     Animator animator;
@@ -101,7 +104,6 @@ public class Player : MonoBehaviour
 
     IEnumerator _Attack()
     {
-
         isAttack = true;
         attackRange.SetActive(true);
 
@@ -137,8 +139,9 @@ public class Player : MonoBehaviour
 
     private void OnTriggerEnter(Collider other)
     {
-        if (other.gameObject.CompareTag("enemy") && !isDash && !isAttack)
+        if (other.gameObject.CompareTag("enemy") && attackRange)
         {
+            other.gameObject.GetComponent<Enemy>().OnDamaged(attackDamage);
             Debug.Log("피해를 입음");
         }
     }
