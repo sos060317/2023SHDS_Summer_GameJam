@@ -11,14 +11,16 @@ public class Player : MonoBehaviour
     private float moveX;
     private float moveZ;
 
+    bool isDash = false;
+    bool isAttack = false;
 
     Rigidbody rigid;
 
-    Vector3 moveVec;
-    Vector3 forwardVec;
-    Vector3 targetPosition;
+    public GameObject attackRange;
 
-    private void Start()
+    Vector3 moveVec;
+
+    private void Awake()
     {
         rigid = GetComponent<Rigidbody>();
     }
@@ -27,7 +29,9 @@ public class Player : MonoBehaviour
     {
         Move();
         Dash();
-        CheckMyForward();
+        LookMouseCursor();
+        Time.timeScale += (1f / 2f) * Time.unscaledDeltaTime;
+        Time.timeScale = Mathf.Clamp(Time.timeScale , 0f, 1f);
     }
 
     void Move() // 플레이어 움직임 (wasd)
@@ -35,30 +39,72 @@ public class Player : MonoBehaviour
         moveX = Input.GetAxisRaw("Horizontal");
         moveZ = Input.GetAxisRaw("Vertical");
 
-        // moveVec = (moveX, 0, moveZ);
+        // 가만히 있지 않는 상태를 확인해주기위함
+        bool hasHorizontalInput = !Mathf.Approximately(moveX, 0f);
+        bool hasVerticalInput = !Mathf.Approximately(moveZ, 0f);
+
+        moveVec = new Vector3(moveX, 0, moveZ);
         rigid.velocity = moveVec.normalized * moveSpeed;
     }
 
     void Dash() // 플레이어 발도술 (마우스 우클릭)
     {
-        if(Input.GetMouseButtonDown(1))
+        if (Input.GetMouseButtonDown(0) && !isDash && !isAttack)
         {
-            
+            StartCoroutine(_Attack());
+        }
+
+        if(Input.GetMouseButtonDown(1) && !isDash && !isAttack)
+        {
             StartCoroutine(_Dash());
         }
     }
 
     IEnumerator _Dash()
     {
-        yield return new WaitForSeconds(0.5f);
-
-        Vector3.MoveTowards(transform.position, targetPosition, dashSpeed);
+        isDash = true;
+        SlowMotion();
+        yield return new WaitForSeconds(0.05f);
+        isDash = false;
+        rigid.AddForce(transform.forward * dashSpeed * 1000f, ForceMode.Impulse);
     }
 
-    void CheckMyForward() // 대시할 목표지점의 벡터를 구해주는 함수
+    IEnumerator _Attack()
     {
-        forwardVec = transform.forward;
-        targetPosition = transform.position + forwardVec * dashDistance;
-        Debug.Log(targetPosition);
+        isAttack = true;
+        attackRange.SetActive(true);
+        yield return new WaitForSeconds(0.1f);
+        attackRange.SetActive(false);
+        isAttack = false;
     }
+
+    private void OnCollisionEnter2D(Collision2D collision)
+    {
+        if (collision.gameObject.CompareTag("Enemy") && isDash)
+        {
+
+        }
+    }
+
+    void LookMouseCursor() // 마우스커서를 화면밖으로 나가지 않게 제어하고 마우스커서 방향쪽으로 플레이어가 바라보게 하는함수
+    {
+        Cursor.lockState = CursorLockMode.Confined;
+
+        Ray cameraRay = Camera.main.ScreenPointToRay(Input.mousePosition);
+        Plane GroupPlane = new Plane(Vector3.up, Vector3.zero);
+        float rayLength;
+
+        if (GroupPlane.Raycast(cameraRay, out rayLength))
+        {
+            Vector3 pointTolook = cameraRay.GetPoint(rayLength);
+            transform.LookAt(new Vector3(pointTolook.x, transform.position.y, pointTolook.z));
+        }
+    }
+
+    void SlowMotion() // 슬로우모션
+    {
+        Time.timeScale = 0.05f;
+        Time.fixedDeltaTime = Time.timeScale * .02f;
+    }
+    
 }
