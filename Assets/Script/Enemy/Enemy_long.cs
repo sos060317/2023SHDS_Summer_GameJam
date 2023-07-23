@@ -1,5 +1,6 @@
 using System.Collections;
 using System.Collections.Generic;
+using Unity.VisualScripting;
 using UnityEngine;
 
 public class Enemy_long : Enemy
@@ -9,6 +10,13 @@ public class Enemy_long : Enemy
 
     [SerializeField] private GameObject Bullet;
     [SerializeField] private Transform Gun;
+    
+
+    protected virtual void Start()
+    {
+        base.Start();
+        Gun = transform.GetChild(1);
+    }
 
     protected override void Update()
     {

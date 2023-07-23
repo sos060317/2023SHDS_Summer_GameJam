@@ -20,9 +20,9 @@ public class EnemySpawner : MonoBehaviour
 
     IEnumerator RandomSpawn()
     {
-        int randomEnemy = Random.Range(0, enemy.Length);
         while(true)
         {
+            int randomEnemy = Random.Range(0, enemy.Length);
             yield return new WaitForSeconds(1f);
 
             Instantiate(enemy[randomEnemy], Return_RandomPosition(), Quaternion.identity);

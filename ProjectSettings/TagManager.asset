@@ -6,6 +6,9 @@ TagManager:
   tags:
   - enemy
   - Slash
+  - Missile
+  - bullet
+  - Weppon
   layers:
   - Default
   - TransparentFX

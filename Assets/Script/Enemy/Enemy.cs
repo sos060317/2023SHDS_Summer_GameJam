@@ -17,7 +17,7 @@ public class Enemy : MonoBehaviour
 
     public GameObject hitEffect;
 
-    void Start()
+    protected virtual void Start()
     {
         rigid = GetComponent<Rigidbody>();
         player = GameObject.FindGameObjectWithTag("Player").transform;
@@ -53,10 +53,6 @@ public class Enemy : MonoBehaviour
         if (other.gameObject.CompareTag("Player"))
         {
             Debug.Log("발도맞음");
-        }
-        if (other.gameObject.CompareTag("Slash"))
-        {
-            Debug.Log("칼맞음");
         }
     }
 

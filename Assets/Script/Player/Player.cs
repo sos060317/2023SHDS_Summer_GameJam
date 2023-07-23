@@ -9,10 +9,11 @@ public class Player : MonoBehaviour
     [SerializeField] private float dashSpeed; //
     [SerializeField] private float dashDistance; // 대시할 목표지점의 거리
     [SerializeField] private float attackDamage;
-
+    [SerializeField] private Collider collider;
+    
     private float moveX;
     private float moveZ;
-
+    
     public bool dashReady = false;
     public bool isDash = false;
     public bool isAttack = false;
@@ -35,10 +36,20 @@ public class Player : MonoBehaviour
 
     Quaternion dashQuaternion;
 
+    public SwordTrigger sword;
+
     private void Start()
     {
         animator = GetComponent<Animator>();
         rigid = GetComponent<Rigidbody>();
+
+        sword.GetTriggered().AddListener(SwordTriggerd);
+    }
+
+    private void SwordTriggerd()
+    {
+        GaugeManager.Instance.expGauge.SetValue(10);
+        Debug.Log("Triggerd!");
     }
 
     private void Update()
@@ -108,12 +119,14 @@ public class Player : MonoBehaviour
         attackRange.SetActive(true);
 
         animator.SetBool("slash", true);
+        collider.enabled = true;
         yield return new WaitForSeconds(0.1f);
         attackRange.SetActive(false);
-        yield return new WaitForSeconds(0.4f);
+        yield return new WaitForSeconds(0.1f);
 
         animator.SetBool("slash", false);
-        yield return new WaitForSeconds(0.5f);
+        yield return new WaitForSeconds(0.1f);
+        collider.enabled = false;
         isAttack = false;
     }
     void LookMouseCursor() // 마우스커서를 화면밖으로 나가지 않게 제어하고 마우스커서 방향쪽으로 플레이어가 바라보게 하는함수
